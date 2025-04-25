@@ -1,0 +1,2 @@
+The aim of this experiment is to test how different concentrations of dying cells (HEK293 that are human derived) change the expression pattern in sensor cells (NIH-3T3 that are mouse derived). The experimental set-up includes 6 samples in total where A1 represents the condition with only sensor 3T3 cells. For the following wells, the ratio of sensor 3T3 to dying cell HEK is shown in brackets: A2 (1:8), A3 (1:3), B1 (1:1), B2 (3:1), B3 (8:1). 
+
