@@ -1,0 +1,28 @@
+# Create header for the output file
+echo -e "Sample\tMappedReads\tTotalReads\tFractionMapped" > read_mapping_summary.tsv
+# Loop through each sample folder and extract values
+for sample in */; do
+    sample=${sample%/}  # remove trailing slash
+
+    gene_file="${sample}/${sample}_ReadsPerGene.out.tab"
+    log_file="${sample}/${sample}_Log.final.out"
+
+    echo "Checking sample: $sample"
+
+    if [[ -f "$gene_file" && -f "$log_file" ]]; then
+        # Mapped reads = sum of column 2 (unstranded) values > 0
+        mapped=$(awk 'NR > 4 && $2 > 0 {sum += $2} END {print sum}' "$gene_file")
+
+        # Total reads = extracted from STAR log
+        total=$(awk '$1=="Number" && $2=="of" && $3=="input" && $4=="reads" {print $6}' "$log_file")
+
+        # Compute mapped / total
+        fraction=$(awk -v m="$mapped" -v t="$total" 'BEGIN {if (t > 0) printf "%.4f", m/t; else print "0.0000"}')
+
+        # Write result
+        echo -e "$sample\t$mapped\t$total\t$fraction" >> read_mapping_summary.tsv
+    else
+        echo "Warning: Missing files for $sample"
+        echo -e "$sample\tNA\tNA\tNA" >> read_mapping_summary.tsv
+    fi
+don
